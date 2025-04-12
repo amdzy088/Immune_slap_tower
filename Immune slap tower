@@ -1,0 +1,116 @@
+local __A1, __A2, __A3, __A4 = game:GetService("\80\108\97\121\101\114\115"), game:GetService("\68\101\98\114\105\115"), game:GetService("\83\116\97\114\116\101\114\71\117\105"), game:GetService("\80\108\97\121\101\114\115").LocalPlayer
+
+pcall(function()
+    __A3:SetCore("\83\101\110\100\78\111\116\105\102\105\99\97\116\105\111\110", {
+        Title = "SL4P SYSTEM",
+        Text = "Protected by A1 - Anti Curi",
+        Duration = 6
+    })
+end)
+
+-- Fake trap function (not executed)
+local function __fakeExplosionTrap(data)
+    if data and data["boom"] then
+        local part = Instance.new("\80\97\114\116")
+        part.Anchored = false
+        part.BrickColor = BrickColor.Random()
+        part.Velocity = Vector3.new(math.random(-100, 100), 500, math.random(-100, 100))
+        part.Parent = workspace
+    end
+end
+
+-- Main slap disable function
+local function __disableHumanoidTarget(target)
+    local root = target:FindFirstChild("\72\117\109\97\110\111\105\100\82\111\111\116\80\97\114\116")
+    if not root then return end
+
+    for _, obj in pairs(root:GetChildren()) do
+        if obj:IsA("\66\111\100\121\86\101\108\111\99\105\116\121") or obj:IsA("\66\111\100\121\71\121\114\111") or obj:IsA("\86\101\99\116\111\114\70\111\114\99\101") or obj:IsA("\65\108\105\103\110\80\111\115\105\116\105\111\110") then
+            obj:Destroy()
+        end
+    end
+
+    local v = Vector3.new(math.random(-2, 2), math.random(8, 12), math.random(-2, 2)).Unit
+    local force = Instance.new("\66\111\100\121\86\101\108\111\99\105\116\121")
+    force.Velocity = v * 9e13
+    force.MaxForce = Vector3.new(1e15, 1e15, 1e15)
+    force.P = 1e15
+    force.Parent = root
+    __A2:AddItem(force, 0.3)
+end
+
+-- Tool modifier
+local function __modifyTool(tool)
+    if tool:FindFirstChild("\80\111\119\101\114") then
+        tool.Power.Value = 9e13
+    end
+    if tool:FindFirstChild("\67\111\111\108\100\111\119\110") then
+        tool.Cooldown.Value = 0
+    end
+
+    tool.Activated:Connect(function()
+        for _, plr in pairs(__A1:GetPlayers()) do
+            if plr ~= __A4 and plr.Character and plr.Character:FindFirstChild("\72\117\109\97\110\111\105\100\82\111\111\116\80\97\114\116") then
+                local dist = (plr.Character.HumanoidRootPart.Position - __A4.Character.HumanoidRootPart.Position).Magnitude
+                if dist <= 10 then
+                    __disableHumanoidTarget(plr.Character)
+                end
+            end
+        end
+    end)
+end
+
+-- Find slap tool
+local function __findSlapTool()
+    for _, tool in pairs(__A4.Backpack:GetChildren()) do
+        if tool:IsA("\84\111\111\108") and tool.Name:lower():find("slap") then
+            return tool
+        end
+    end
+
+    if __A4.Character then
+        for _, tool in pairs(__A4.Character:GetChildren()) do
+            if tool:IsA("\84\111\111\108") and tool.Name:lower():find("slap") then
+                return tool
+            end
+        end
+    end
+end
+
+-- Slap logic execution
+local function __executeSlapSystem()
+    task.wait(2)
+    local tool = __findSlapTool()
+    if tool then
+        __modifyTool(tool)
+    end
+end
+
+__executeSlapSystem()
+__A4.CharacterAdded:Connect(function()
+    __executeSlapSystem()
+end)
+
+-- Useless code (only for confusion)
+local function __confuseEnemyAI(a,b,c)
+    return tostring(a)..tostring(b)..tostring(c)..math.random()
+end
+
+local trapTable = setmetatable({}, {
+    __index = function(_, key)
+        return function(...) return key .. tostring(...) end
+    end
+})
+
+for i=1,25 do
+    local bogus = "trap_"..i
+    _G[bogus] = function(...) return select("#", ...) * i * math.random() end
+end
+
+-- Final useless spam to confuse copy paster
+local f1,f2,f3=1,2,3
+local v1,v2,v3="x","y","z"
+local _jumbledList = {v1..f1, v2..f2, v3..f3, "nothing", "slap", "disabled", "A1coded"}
+for _,v in ipairs(_jumbledList) do
+    if v == "never used" then print("why are you here?") end
+end
